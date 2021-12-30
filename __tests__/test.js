@@ -26,7 +26,6 @@ describe("app", () => {
 
 describe("/api", () => {
   /// HAPPY PATHS (get, filter, sortby)
-
   describe("GET ALL PROJECTS", () => {
     it("Status: 200. Responds with an array of project objects", () => {
       return request(app)
@@ -147,10 +146,38 @@ describe("/api", () => {
           expect(projects).to.be.sortedBy(`type`);
         });
     });
+
+    /// ERROR HANDLING
+    it("Status: 400. Responds with an error message when the type filter is invalid", () => {
+      return request(app)
+        .get("/api/projects?type=NotAType")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid type query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when the tech_tags filter is invalid", () => {
+      return request(app)
+        .get("/api/projects?type=Solo&tech_tags=NotATechTag")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid tech tag query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when one tech_tags filter is invalid", () => {
+      return request(app)
+        .get("/api/projects?tech_tags=MongoDB&tech_tags=NotATechTag")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid tech tag query.");
+        });
+    });
+    //check for bad sorting/filtering!!!!! - manual
+    //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
+    //shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
   });
 
   /// INVALID METHODS (post, patch, put, delete with both / and /projects)
-
   describe("POST - INVALID REQUEST", () => {
     it("Status: 405. Responds with an error message when the path is not allowed", () => {
       return request(app)
@@ -225,13 +252,8 @@ describe("/api", () => {
   });
 });
 
-//check for bad sorting/filtering!!!!! - manual
-//shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
-//shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
-
 describe("/api/project/:_id", () => {
   /// HAPPY PATH (get)
-
   describe("GET PROJECT BY ID", () => {
     it("Status: 200. Responds with a project object with the relevant properties", () => {
       return request(app)
@@ -261,7 +283,7 @@ describe("/api/project/:_id", () => {
         });
     });
 
-    // ERROR HANDLING
+    /// ERROR HANDLING
     it("Status: 404. Responds with an error message when the path is logical but does not exist", () => {
       return request(app)
         .get("/api/project/another-app")
@@ -272,8 +294,7 @@ describe("/api/project/:_id", () => {
     });
   });
 
-  // INVALID METHODS (post, patch, put, delete)
-
+  /// INVALID METHODS (post, patch, put, delete)
   describe("DELETE - INVALID REQUEST", () => {
     it("Status: 405. Responds with an error message when the path is not allowed", () => {
       return request(app)
