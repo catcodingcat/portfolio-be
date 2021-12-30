@@ -25,6 +25,8 @@ describe("app", () => {
 });
 
 describe("/api", () => {
+  /// HAPPY PATHS (get, filter, sortby)
+
   describe("GET ALL PROJECTS", () => {
     it("Status: 200. Responds with an array of project objects", () => {
       return request(app)
@@ -146,55 +148,87 @@ describe("/api", () => {
         });
     });
   });
+
+  /// INVALID METHODS (post, patch, put, delete with both / and /projects)
+
+  describe("POST - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .post("/api/")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .post("/api/projects")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+  describe("PATCH - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .patch("/api/")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .patch("/api/projects")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+  describe("PUT - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .put("/api/")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .put("/api/projects")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+  describe("DELETE - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .delete("/api/")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .delete("/api/projects")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
 });
 
 //check for bad sorting/filtering!!!!! - manual
 //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
 //shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
 //ERROR HANDLING
-
-//     describe("POST - INVALID REQUEST", () => {
-//       it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//         return request(app)
-//           .post("/api/")
-//           .expect(405)
-//           .then(({ body }) => {
-//             expect(body.msg).to.deep.equal("Method not allowed.");
-//           });
-//       });
-//     });
-//     describe("PATCH - INVALID REQUEST", () => {
-//       it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//         return request(app)
-//           .patch("/api/")
-//           .expect(405)
-//           .then(({ body }) => {
-//             expect(body.msg).to.deep.equal("Method not allowed.");
-//           });
-//       });
-//     });
-//     describe("PUT - INVALID REQUEST", () => {
-//       it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//         return request(app)
-//           .put("/api/")
-//           .expect(405)
-//           .then(({ body }) => {
-//             expect(body.msg).to.deep.equal("Method not allowed.");
-//           });
-//       });
-//     });
-//     describe("DELETE - INVALID REQUEST", () => {
-//       it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//         return request(app)
-//           .delete("/api/")
-//           .expect(405)
-//           .then(({ body }) => {
-//             expect(body.msg).to.deep.equal("Method not allowed.");
-//           });
-//       });
-//     });
-//   });
-// });
 
 // describe("/api/project/:_id", () => {
 //   describe("GET PROJECT BY ID", () => {
