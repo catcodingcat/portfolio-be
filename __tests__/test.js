@@ -112,70 +112,45 @@ describe("/api", () => {
           expect(projects).to.have.lengthOf(0);
         });
     });
+    it("Status: 200, Responds with projects sorted by descending creation by default", () => {
+      return request(app)
+        .get("/api/projects")
+        .expect(200)
+        .then(({ body }) => {
+          const { projects } = body;
+          expect(projects).to.be.sortedBy(`creation_date`, {
+            descending: true,
+          });
+        });
+    });
+    it("Status: 200, Responds with projects sorted by ascending title (alphabetically)", () => {
+      return request(app)
+        .get("/api/projects?sortby=title&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const { projects } = body;
+          expect(projects).to.be.an("array");
+          expect(projects).to.have.lengthOf(2);
+          expect(projects).to.be.sortedBy(`title`);
+        });
+    });
+    it("Status: 200, Responds with projects sorted by ascending type (alphabetically)", () => {
+      return request(app)
+        .get("/api/projects?sortby=type&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const { projects } = body;
+          expect(projects).to.be.an("array");
+          expect(projects).to.have.lengthOf(2);
+          expect(projects).to.be.sortedBy(`type`);
+        });
+    });
   });
 });
 
-// it("Status: 200, Responds with an array of filtered listing objects for multiple queries", () => {
-//   return request(app)
-//     .get("/api/projects?location.city=Manchester&amenities.kitchen=false")
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { listings } = body;
-//       expect(listings).to.be.an("array");
-//       expect(listings).to.have.lengthOf(3);
-//       listings.forEach((listingObj) => {
-//         expect(Object.keys(listingObj)).to.have.lengthOf(13);
-//         expect(listingObj.location.city).to.deep.equal(`Manchester`);
-//         expect(listingObj.amenities.kitchen).to.deep.equal(false);
-//       });
-//     });
-// });
-
-// it("Status: 200, Responds with listings sorted by descending space rating by default", () => {
-//   return request(app)
-//     .get("/api/listings")
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { listings } = body;
-//       expect(listings).to.be.an("array");
-//       expect(listings).to.have.lengthOf(7);
-//       expect(listings[0].spaceRating).to.deep.equal(4.9);
-//       expect(listings[6].spaceRating).to.deep.equal(3);
-//       expect(listings).to.be.sortedBy(`spaceRating`, {
-//         descending: true,
-//       });
-//     });
-// });
-
-// it("Status: 200, Responds with listings sorted by ascending price", () => {
-//   return request(app)
-//     .get("/api/listings?sortby=price&order=asc")
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { listings } = body;
-//       expect(listings).to.be.an("array");
-//       expect(listings).to.have.lengthOf(7);
-//       expect(listings).to.be.sortedBy(`price`);
-//     });
-// });
-
-// it("Status: 200, Responds with listings sorted by ascending alphabetical title and filtered by city", () => {
-//   return request(app)
-//     .get("/api/listings?location.city=Manchester&sortby=title&order=asc")
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { listings } = body;
-//       expect(listings).to.be.an("array");
-//       expect(listings).to.be.sortedBy(`title`);
-//       expect(listings).to.have.lengthOf(4);
-//       listings.forEach((listingObj) => {
-//         expect(Object.keys(listingObj)).to.have.lengthOf(13);
-//         expect(listingObj.location.city).to.deep.equal(`Manchester`);
-//       });
-//     });
-// });
-
 //check for bad sorting/filtering!!!!! - manual
+//shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
+//shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
 //ERROR HANDLING
 
 //     describe("POST - INVALID REQUEST", () => {
