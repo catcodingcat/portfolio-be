@@ -228,57 +228,38 @@ describe("/api", () => {
 //check for bad sorting/filtering!!!!! - manual
 //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
 //shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
-//ERROR HANDLING
 
-// describe("/api/project/:_id", () => {
-//   describe("GET PROJECT BY ID", () => {
-//     it("Status: 200. Responds with a project object with the relevant properties", () => {
-//       return (
-//         request(app)
-//           .get("/api/listings/61adfad4bacbe7ff1dfb7f2a")
-//           .expect(200)
-//           .then(({ body }) => {
-//             let listing = body;
-//             expect(listing).to.be.an("object");
-//             expect(Object.keys(listing)).to.have.lengthOf(13);
-//             expect(listing).to.have.all.keys(
-//               "_id",
-//               "title",
-//               "location",
-//               "owner",
-//               "price",
-//               "spaceRating",
-//               "size",
-//               "description",
-//               "amenities",
-//               "reviews",
-//               "contactDetails",
-//               "bookedDays",
-//               "images"
-//             );
-//             expect(listing.location).to.be.an("object");
-//             expect(listing.location).to.deep.nested.keys("city", "postcode");
-//             expect(listing.amenities).to.be.an("object");
-//             expect(listing.amenities).to.deep.nested.keys(
-//               "power",
-//               "accessible",
-//               "parking",
-//               "indoor",
-//               "outdoor",
-//               "WC",
-//               "kitchen",
-//               "_24HourAccess"
-//             );
-//             expect(listing.contactDetails).to.be.an("object");
-//             expect(listing.contactDetails).to.deep.nested.keys(
-//               "phoneNumber",
-//               "emailAddress"
-//             );
-//             expect(listing.reviews).to.be.an("array");
-//             expect(listing.images).to.be.an("array");
-//           })
-//       );
-//     });
+describe.only("/api/project/:_id", () => {
+  describe("GET PROJECT BY ID", () => {
+    it("Status: 200. Responds with a project object with the relevant properties", () => {
+      return request(app)
+        .get("/api/project/make-space-app")
+        .expect(200)
+        .then(({ body }) => {
+          let project = body;
+          expect(project).to.be.an("object");
+          expect(Object.keys(project)).to.have.lengthOf(13);
+          expect(project).to.have.all.keys(
+            "_id",
+            "title",
+            "overview",
+            "description",
+            "creation_date",
+            "type",
+            "tech_tags",
+            "backend_github_link",
+            "frontend_github_link",
+            "backend_hosted_link",
+            "frontend_hosted_link",
+            "main_image",
+            "screenshots"
+          );
+          expect(project.tech_tags).to.be.an("array");
+          expect(project.screenshots).to.be.an("array");
+        });
+    });
+  });
+});
 
 //     it("Status: 404. Responds with an error message when the path is logical (hexidecimal) but does not exist", () => {
 //       return request(app)
