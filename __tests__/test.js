@@ -229,7 +229,9 @@ describe("/api", () => {
 //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
 //shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
 
-describe.only("/api/project/:_id", () => {
+describe("/api/project/:_id", () => {
+  /// HAPPY PATH (get)
+
   describe("GET PROJECT BY ID", () => {
     it("Status: 200. Responds with a project object with the relevant properties", () => {
       return request(app)
@@ -258,69 +260,61 @@ describe.only("/api/project/:_id", () => {
           expect(project.screenshots).to.be.an("array");
         });
     });
+
+    // ERROR HANDLING
+    it("Status: 404. Responds with an error message when the path is logical but does not exist", () => {
+      return request(app)
+        .get("/api/project/another-app")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Project not found.");
+        });
+    });
+  });
+
+  // INVALID METHODS (post, patch, put, delete)
+
+  describe("DELETE - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .delete("/api/project/make-space-app")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+
+  describe("PATCH - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .patch("/api/project/make-space-app")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+
+  describe("POST - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .post("/api/project/make-space-app")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
+  });
+
+  describe("PUT - INVALID REQUEST", () => {
+    it("Status: 405. Responds with an error message when the path is not allowed", () => {
+      return request(app)
+        .put("/api/project/make-space-app")
+        .expect(405)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Method not allowed.");
+        });
+    });
   });
 });
-
-//     it("Status: 404. Responds with an error message when the path is logical (hexidecimal) but does not exist", () => {
-//       return request(app)
-//         .get("/api/listings/61adfad4bacbe7ff1dfb7f2b")
-//         .expect(404)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Listing not found.");
-//         });
-//     });
-
-//     it("Status: 400. Responds with an error message when the path is illogical (not hexidecimal)", () => {
-//       return request(app)
-//         .get("/api/listings/not-a-hexidecimal")
-//         .expect(400)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Invalid data entry.");
-//         });
-//     });
-//   });
-
-//   describe("DELETE - INVALID REQUEST", () => {
-//     it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//       return request(app)
-//         .delete("/api/listings/61adfad4bacbe7ff1dfb7f2a")
-//         .expect(405)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Method not allowed.");
-//         });
-//     });
-//   });
-
-//   describe("PATCH - INVALID REQUEST", () => {
-//     it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//       return request(app)
-//         .patch("/api/listings/61adfad4bacbe7ff1dfb7f2a")
-//         .expect(405)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Method not allowed.");
-//         });
-//     });
-//   });
-
-//   describe("POST - INVALID REQUEST", () => {
-//     it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//       return request(app)
-//         .post("/api/listings/61adfad4bacbe7ff1dfb7f2a")
-//         .expect(405)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Method not allowed.");
-//         });
-//     });
-//   });
-
-//   describe("PUT - INVALID REQUEST", () => {
-//     it("Status: 405. Responds with an error message when the path is not allowed", () => {
-//       return request(app)
-//         .put("/api/listings/61adfad4bacbe7ff1dfb7f2a")
-//         .expect(405)
-//         .then(({ body }) => {
-//           expect(body.msg).to.deep.equal("Method not allowed.");
-//         });
-//     });
-//   });
-// });

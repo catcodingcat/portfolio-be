@@ -26,7 +26,8 @@ exports.getProjectById = (req, res, next) => {
   const { _id } = req.params;
   ProjectModel.find({ _id })
     .then((project) => {
-      if (project === null) res.status(404).json({ msg: "Project not found." });
+      if (project.length < 1)
+        res.status(404).json({ msg: "Project not found." });
       else res.status(200).json(project[0]);
     })
     .catch(next);
