@@ -146,6 +146,14 @@ describe("/api", () => {
           expect(projects).to.be.sortedBy(`type`);
         });
     });
+    it("Status: 200. Responds with an empty array when the type exists but contains no projects", () => {
+      return request(app)
+        .get("/api/projects?type=Pair")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.projects).to.deep.equal([]);
+        });
+    });
 
     /// ERROR HANDLING
     it("Status: 400. Responds with an error message when the type filter is invalid", () => {
@@ -172,9 +180,55 @@ describe("/api", () => {
           expect(body.msg).to.deep.equal("Invalid tech tag query.");
         });
     });
-    //check for bad sorting/filtering!!!!! - manual
+    it("Status: 400. Responds with an error message when a filter is non-existent", () => {
+      return request(app)
+        .get("/api/projects?not_tech_tags=MongoDB")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("not_tech_tags is an invalid query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when a filter exists but is not permitted", () => {
+      return request(app)
+        .get("/api/projects?title=Make Space App")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Cannot query by title.");
+        });
+    });
+    it("Status: 400. Responds with an error message when the sortby query is invalid", () => {
+      return request(app)
+        .get("/api/projects?sortby=invalid_query")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid sortby query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when the sortby query is of an incorrect data type", () => {
+      return request(app)
+        .get("/api/projects?sortby=123")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid sortby query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when the order query is invalid", () => {
+      return request(app)
+        .get("/api/projects?order=invalid_query")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid order query.");
+        });
+    });
+    it("Status: 400. Responds with an error message when the order query is of an incorrect data type", () => {
+      return request(app)
+        .get("/api/projects?sortby=type&order=123")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).to.deep.equal("Invalid order query.");
+        });
+    });
     //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
-    //shouldnt filter by id, title, overview, description, creation_date, links, images, screenshots
   });
 
   /// INVALID METHODS (post, patch, put, delete with both / and /projects)
