@@ -185,7 +185,7 @@ describe("/api", () => {
         .get("/api/projects?not_tech_tags=MongoDB")
         .expect(400)
         .then(({ body }) => {
-          expect(body.msg).to.deep.equal("not_tech_tags is an invalid query.");
+          expect(body.msg).to.deep.equal("not_tech_tags is an invalid filter.");
         });
     });
     it("Status: 400. Responds with an error message when a filter exists but is not permitted", () => {
@@ -193,7 +193,7 @@ describe("/api", () => {
         .get("/api/projects?title=Make Space App")
         .expect(400)
         .then(({ body }) => {
-          expect(body.msg).to.deep.equal("Cannot query by title.");
+          expect(body.msg).to.deep.equal("Cannot filter by title.");
         });
     });
     it("Status: 400. Responds with an error message when the sortby query is invalid", () => {
@@ -228,7 +228,6 @@ describe("/api", () => {
           expect(body.msg).to.deep.equal("Invalid order query.");
         });
     });
-    //shouldnt sortby id, overview, description, tech_tags, any links, images, screenshots
   });
 
   /// INVALID METHODS (post, patch, put, delete with both / and /projects)
